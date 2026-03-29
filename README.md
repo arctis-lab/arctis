@@ -186,6 +186,7 @@ Python: [Ruff](https://docs.astral.sh/ruff/). UI: ESLint in `ui/pipeline_a/`.
 - Mitwirkung & CI lokal: [`CONTRIBUTING.md`](CONTRIBUTING.md)
 - Release & Tags: [`docs/RELEASE.md`](docs/RELEASE.md)
 - Auth & Identity (A1.3): [`docs/Authentication.md`](docs/Authentication.md)
+- Observability (A1.4): [`docs/Observability.md`](docs/Observability.md)
 
 ## Control Plane API (optional Launch-Umgebung)
 
@@ -194,7 +195,7 @@ Beim Betrieb der FastAPI-App (`uvicorn arctis.app:create_app --factory`) u. a.:
 - **LLM (Dashboard):** `ARCTIS_ENCRYPTION_KEY` — Fernet-Key; nötig für `POST /llm-config` und Tenant-LLM-Key-Speicher.
 - **Stripe:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, … — Billing unter `/billing/*`.
 - **Sentry:** `SENTRY_DSN`
-- **Prometheus:** `PROMETHEUS_ENABLED=true` → `GET /metrics`
+- **Prometheus:** Scrape **`GET /metrics/prometheus`** mit **`X-API-Key`** (Scope `tenant_admin` oder `system_admin`) — siehe [`docs/Observability.md`](docs/Observability.md)
 
 **Produktion:** migrierte Datenbank (`alembic upgrade head` mit `DATABASE_URL`) — siehe [`docs/Deployment.md`](docs/Deployment.md). Kein `create_all()` für das Hauptschema in Produktion.
 

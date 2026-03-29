@@ -45,6 +45,8 @@ Vollständige Secret-Policy und Tabellen: [`Deployment.md`](Deployment.md) (Absc
 
 Auth0/Supabase, API-Keys vs. JWT, Callbacks, Tenant: [`Authentication.md`](Authentication.md) (A1.3).
 
+Sentry, Prometheus-Scrape, Grafana, Alerts: [`Observability.md`](Observability.md) (A1.4).
+
 ## OpenAPI / Docs
 
 - **Prod (Default):** Doc-Routen sind deaktiviert; direkte Requests auf `/docs`, `/redoc`, `/openapi.json` liefern **404** (kein 401-Hinweis).

@@ -26,9 +26,17 @@ Siehe [`docs/Authentication.md`](docs/Authentication.md).
 - [ ] Im IdP: **Callback URLs**, **Logout URLs**, **Site URL** / Web Origins zum Dashboard-Host; konsistent mit [`ALLOWED_ORIGINS`](docs/Deployment.md) für API-Aufrufe
 - [ ] **Tenant-API-Keys** in der DB für Staging/Prod angelegt; Scopes geprüft (`pytest tests/api/`)
 
+## Observability (A1.4)
+
+Siehe [`docs/Observability.md`](docs/Observability.md).
+
+- [ ] **`SENTRY_DSN`** gesetzt und Projekt-Alerts in Sentry konfiguriert (siehe A1.2)
+- [ ] **Prometheus:** Scrape von **`GET /metrics/prometheus`** mit **`X-API-Key`** (Scope `tenant_admin` oder `system_admin`) — Key nur im Secret Store; kein öffentlicher unauthentifizierter Metrics-Endpunkt
+- [ ] **Grafana** (oder vergleichbar) an eure Prometheus-Instanz angebunden; Dashboards für Latenz/Fehler/429 nach Bedarf
+- [ ] **Alertmanager** / ähnliche Regeln für 5xx, Latenz, ggf. Budget-Metriken (Runbook außerhalb Repo)
+
 ## Weitere Punkte
 
-- [ ] PROMETHEUS_ENABLED=true
 - [ ] Billing-Webhooks in Stripe-Dashboard zur API-URL konfiguriert (wenn Billing aktiv)
 - [ ] Alembic upgrade head applied (siehe A1.1, falls noch nicht abgehakt)
 - [ ] Playwright smoke tests green

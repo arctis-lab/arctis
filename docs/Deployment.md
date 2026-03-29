@@ -73,6 +73,12 @@ API-Keys, Auth0/Supabase, Callbacks, Tenant-Modell und Abgrenzung JWT: **[Authen
 
 ---
 
+## Observability (A1.4)
+
+Sentry, Prometheus-Scrape (`/metrics/prometheus`), Grafana außerhalb des Repos, Alerts: **[Observability.md](Observability.md)**.
+
+---
+
 ## API base URL (OpenAPI servers)
 
 - **Local:** `http://127.0.0.1:8000` (typical `uvicorn` default).
