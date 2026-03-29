@@ -1,4 +1,5 @@
 # Build and push multi-arch image to GHCR.
+# Image: ghcr.io/<lowercase github.repository> — e.g. ghcr.io/arctis/arctis after org transfer.
 # Triggers: tag push v*, or manual "Run workflow" (uses [project].version from pyproject.toml).
 name: Docker publish
 

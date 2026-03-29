@@ -5,6 +5,20 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 
 ## [Unreleased]
 
+## [0.1.2] — 2026-03-29
+
+Paketversion in [`pyproject.toml`](pyproject.toml): **0.1.2**.
+
+### Changed
+
+- **GitHub:** Kanonisches Repository **`arctis/arctis`** (`https://github.com/arctis/arctis`). GHCR-Images: **`ghcr.io/arctis/arctis:<version>`** (Workflows nutzen `github.repository`, kein fester Namespace im YAML).
+
+### Notes
+
+- **Organisations-Migration:** Vorheriges Repo unter anderer Org — nach Umzug lokales Remote setzen: `git remote set-url origin https://github.com/arctis/arctis.git`. Details: [`docs/RELEASE.md`](docs/RELEASE.md#migration-zur-organisation-arctis-github).
+- **Secrets:** Bei Repo-Transfer können **Actions- und Dependabot-Secrets** neu gesetzt werden müssen — unter **Settings → Secrets and variables** prüfen.
+- **Alte Organisation:** Nicht automatisch löschen; Entfernung später **manuell** entscheiden (Redirects von GitHub können eine Weile bestehen bleiben).
+
 ## [0.1.1] — 2026-03-29
 
 Paketversion in [`pyproject.toml`](pyproject.toml): **0.1.1**.
@@ -39,4 +53,4 @@ Paketversion in [`pyproject.toml`](pyproject.toml): **0.1.0**.
 
 - Breaking-Änderungen an API oder `ghost.yaml`-Schema künftig unter `[Unreleased]` → **Changed** / **Removed** mit Migrationshinweis dokumentieren.
 
-<!-- Releases: https://github.com/arctis-engine/arctis/releases -->
+<!-- Releases: https://github.com/arctis/arctis/releases -->

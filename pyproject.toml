@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arctis"
-version = "0.1.1"
+version = "0.1.2"
 description = "Arctis API, engine runtime, and Ghost CLI (HTTP client for customer workflows)."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -31,7 +31,7 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/arctis-engine/arctis"
+Repository = "https://github.com/arctis/arctis"
 
 [project.scripts]
 ghost = "arctis_ghost.cli:main"
