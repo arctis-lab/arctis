@@ -48,7 +48,7 @@ Nach **`git push origin vX.Y.Z`** (nach merge auf `main`/`master`):
 | 3 | **Secrets:** [Repository-Secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) werden beim **Transfer** ggf. **nicht** übernommen — nach dem Umzug unter **Settings → Secrets and variables → Actions** prüfen und fehlende Werte neu setzen. |
 | 4 | **Transfer:** Repository **Settings → General → Danger zone → Transfer ownership** → Zielorganisation **`arctis`**, Repo-Name **`arctis`**. Nach Transfer: kanonische URL **`https://github.com/arctis/arctis`**. |
 | 5 | **Lokal:** `git remote set-url origin https://github.com/arctis/arctis.git` und `git fetch origin`. |
-| 6 | **GHCR:** Workflows pushen nach **`ghcr.io/arctis/arctis`** (aus `GITHUB_REPOSITORY`); kein Workflow-Patch nötig. **`workflow_dispatch`** bleibt aktiv. |
+| 6 | **GHCR:** Workflows pushen nach **`ghcr.io/<org>/<repo>`** (aus `GITHUB_REPOSITORY`); nach Transfer ist das **`ghcr.io/arctis/arctis`** — kein YAML-Patch nötig. **`workflow_dispatch`** bleibt aktiv. War der Tag **v0.1.2** schon vor dem Transfer gelaufen, kann unter der **neuen** Org einmal **Actions → Docker publish → Run workflow** ausgeführt werden, damit das Image im neuen Namespace landet. |
 | 7 | **Packages:** **Packages** (rechts im Repo oder unter Org) → Container → **Package settings** → **Change visibility** → **Public** (für anonymes Pull). |
 | 8 | **Test:** `docker pull ghcr.io/arctis/arctis:0.1.2` (nach erfolgreichem Release-Tag `v0.1.2`). |
 | 9 | **Alte Organisation:** Nicht automatisch löschen; später manuell entscheiden (Redirects können bestehen bleiben). |
