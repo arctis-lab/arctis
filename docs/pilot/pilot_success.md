@@ -36,4 +36,5 @@ Platzhalter durch **eure** Ziele ersetzen.
 ## Verknüpfung
 
 - Scope-Vorgaben: [`pilot_scope.md`](pilot_scope.md)  
-- Commercial Gate: [`../commercial/COMMERCIAL_CHECKLIST.md`](../commercial/COMMERCIAL_CHECKLIST.md)
+- Commercial Gate: [`../commercial/COMMERCIAL_CHECKLIST.md`](../commercial/COMMERCIAL_CHECKLIST.md)  
+- Nach dem Pilot: [`../a5/README.md`](../a5/README.md) (Phase **A5** — Telemetrie, Roadmap 1.1.0, Feedback)

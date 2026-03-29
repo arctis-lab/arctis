@@ -312,6 +312,13 @@ ghost verify <run_id>
 
 </details>
 
+<details>
+<summary><strong>PHASE A5 — Sustain & Evolve</strong> (Doku-Ergänzung)</summary>
+
+Operativer Nachlauf nach Pilot/Go-Live — siehe [`docs/a5/README.md`](a5/README.md): Telemetrie, Bugfix-Rhythmus, Roadmap **1.1.0**, Feedback → Issues/CHANGELOG.
+
+</details>
+
 ---
 
 ## Abhängigkeiten (Reihenfolge)
@@ -320,7 +327,7 @@ ghost verify <run_id>
 A0.1 → A0.2 → A0.3 → A0.4 → [A0.5 wenn Option B] → Gate A0
   → A1.1–A1.6 → Gate A1
   → A2.1–A2.4 → Gate A2
-  → A3 → A4
+  → A3 → A4 → A5 (optional, Sustain)
 ```
 
 Parallel möglich: A0.4 (Copy) teilweise mit A0.2, sobald A0.1 steht.

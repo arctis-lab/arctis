@@ -21,6 +21,10 @@ Pricing, SLA, Evidence-Kernbotschaften, Release-Policy für Vertrieb und Vertrag
 
 Tenant-Setup, Pilot-Scope, Onboarding-Call, Checklisten: **[`../pilot/README.md`](../pilot/README.md)**.
 
+## Sustain & Evolve (Phase A5)
+
+Nach Go-Live: Telemetrie, Roadmap, Feedback — **[`../a5/README.md`](../a5/README.md)**.
+
 ---
 
 ## Ghost CLI (Customer-Execute)
