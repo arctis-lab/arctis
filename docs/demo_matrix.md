@@ -3,15 +3,19 @@
 **Zweck:** Ein **Showcase‑Artefakt** für Ghost und die Customer‑Execute‑Skills — kompakt, tabellarisch, ohne neue Produktfeatures.  
 Dient README, Docs, Schulungen und Demo‑Videos als **Referenzkarte**.
 
+**Produkt & PLG (Kurz):** **Arctis** = Pipeline A + API; **Ghost** = CLI für Customer‑Execute. **Erstkontakt:** README [**Try Arctis in 30 seconds**](../README.md#try-arctis-in-30-seconds) (6 Schritte) · ausführliches **60‑Sekunden**-Storyboard: [arctis_ghost_demo_60.md](arctis_ghost_demo_60.md).
+
 **Landingpage & Rollen:** Die **sechs Erlebnis‑Module** (C‑Level, Security, Tech, …), Kuratier‑Regeln und Story‑Arc stehen in [arctis_ghost_demo_matrix.md](arctis_ghost_demo_matrix.md). Diese Datei bleibt die **technische** Matrix (Skills, Routing, Evidence).
 
-**Ghost CLI — ehrliche Einordnung:** Befehle wie `run`, `watch`, `evidence`, **`explain`** (Kurzfassung pro Run-ID), `fetch`, `doctor`, `pull-artifacts`, `init-demo` und Rezepte (`run --recipe`) sind im Repo umgesetzt (siehe [ghost_implementation_prompts.md](ghost_implementation_prompts.md), Stand im Kopf). **Lokales PLG light (P8):** optionale Branding‑Felder in `envelope.json` und `__STATUS.txt` unter `outgoing_root` — [ghost_plg.md](ghost_plg.md); **ohne** serverseitige Durchsetzung durch den Client. **P10–P11** sind im CLI umgesetzt (Sandbox/Dry-Run; **`ghost heartbeat`** + Matrix [`ghost_p11_test_matrix.md`](ghost_p11_test_matrix.md)). **P12–P14** (Verify, Meta, Hooks, …) bleiben **Roadmap** — in Modul‑Texten der Landingpage‑Matrix als *Pilot* / *Roadmap* labeln.
+**Ghost CLI — ehrliche Einordnung:** Befehle wie `run`, `watch`, `evidence`, **`explain`**, `fetch`, `doctor`, **`pull-artifacts`**, **`verify`**, `init-demo` und Rezepte (`run --recipe`) sind im Repo umgesetzt (siehe [ghost_cli_reference.md](ghost_cli_reference.md) und [ghost_implementation_prompts.md](ghost_implementation_prompts.md)). **Lokales PLG light (P8):** optionale Branding‑Felder in `envelope.json` und `__STATUS.txt` unter `outgoing_root` — [ghost_plg.md](ghost_plg.md); **ohne** serverseitige Durchsetzung durch den Client. **P10–P11:** Sandbox/Dry-Run; **`ghost heartbeat`** ([`ghost_p11_test_matrix.md`](ghost_p11_test_matrix.md)). **P12:** u. a. **`ghost verify`**, Auto-Recipe — **P13–P14:** `meta`, Hooks — Details und Roadmap-Labels in der CLI-Referenz.
 
 **Verknüpfungen**
 
 | Dokument | Nutzen |
 |----------|--------|
-| [demo_60.md](demo_60.md) | End‑to‑End‑Ablauf in ~60 s (`run` → `watch` → `evidence`) |
+| [README](../README.md) | Produktzeile, Zielgruppe, **Try Arctis in 30 seconds** (kanonische 6 Schritte) |
+| [demo_60.md](demo_60.md) | End‑to‑End im Terminal (`init-demo` … `verify`; optional `evidence` / `fetch`) |
+| [arctis_ghost_demo_60.md](arctis_ghost_demo_60.md) | 60‑Sekunden‑Kundenstory (gleiche Sequenz wie README, erzählerisch) |
 | [arctis_ghost_demo_matrix.md](arctis_ghost_demo_matrix.md) | Story‑Module & Zielgruppen (Landingpage / Erzählbogen) |
 | [arctis_ghost_project_plan.md](arctis_ghost_project_plan.md) | Kanonische Skill‑Tabelle & Architektur |
 
@@ -85,8 +89,9 @@ Gebaut durch `EvidenceBuilder` (Customer‑Execute); Schlüssel sind **stabil** 
 
 ## 4. Kurzablauf für Demos
 
-1. **Skills wählen** — aus der Skill‑Matrix die passenden `id`s ins Execute‑JSON legen (siehe [demo_60.md](demo_60.md)).  
-2. **Routing erklären** — mit `routing_explain` + Sektion **Routing Decision** in `ghost evidence`.  
-3. **Evidence erzählen** — mit `cost_token_snapshot`, `pipeline_config_matrix`, `evidence_subset` (optional) die **Matrix** „von außen nach innen“ füllen.
+1. **Erstkontakt** — README [**Try Arctis in 30 seconds**](../README.md#try-arctis-in-30-seconds): `run` → `pull-artifacts` → `verify` als **Kern-Story** (optional `watch` / `evidence` für Show).  
+2. **Skills wählen** — aus der Skill‑Matrix die passenden `id`s ins Execute‑JSON legen (siehe [demo_60.md](demo_60.md)).  
+3. **Routing erklären** — mit `routing_explain` + Sektion **Routing Decision** in `ghost evidence`.  
+4. **Evidence erzählen** — mit `cost_token_snapshot`, `pipeline_config_matrix`, `evidence_subset` (optional) die **Matrix** „von außen nach innen“ füllen.
 
 Damit ist die **technische Demo‑Matrix** als **Ghost‑Referenzkarte** komplett; Erweiterungen (Tabellen‑Layout, zusätzliches ANSI) können auf diesem Gerüst aufsetzen, ohne die Faktenbasis zu ändern. **Marketing-/Modul‑Texte** bitte an [arctis_ghost_demo_matrix.md](arctis_ghost_demo_matrix.md) spiegeln und gegen den **Implementierungs‑Stand** ([ghost_implementation_prompts.md](ghost_implementation_prompts.md)) prüfen.

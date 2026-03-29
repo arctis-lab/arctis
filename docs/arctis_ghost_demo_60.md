@@ -2,9 +2,17 @@
 
 **Zweck:** Ein durchgängiger Ablauf, den du **live** oder **aufgezeichnet** zeigen kannst: von der Datei bis zum **Evidence-Bundle** und **Skill-Reports** — ohne Engine-Import, nur HTTP + Ordner.
 
+## Arctis in 60 Sekunden (für Leser ohne Repo-Kontext)
+
+| Frage | Kurzantwort |
+|--------|-------------|
+| **Was ist Arctis?** | Plattform für **Pipeline A** (IR, Engine, Control Plane) mit **FastAPI**; **Ghost** ist die CLI dazu — **HTTP-only**, keine zweite Policy im Client. |
+| **Wer nutzt was?** | **Entwickler/Platform** integrieren die API; **Kunden/Field** starten mit **Ghost** im Ordner (`ghost.yaml`, Payload, `outgoing/…`). |
+| **Wie startet der erste Run?** | Dieselbe **6‑Schritt-Sequenz** wie im README: [**Try Arctis in 30 seconds**](../README.md#try-arctis-in-30-seconds) — hier unten als **Storyboard (~60 s Erzählzeit)** ausformuliert; technisch identisch zu [`demo_60.md`](demo_60.md). |
+
 **Einordnung:** Dieses Skript ist die **60-Sekunden-Baseline**; für **rollenbasierte** Landingpage-Module (C-Level, Security, Tech, …) siehe [arctis_ghost_demo_matrix.md](arctis_ghost_demo_matrix.md) — dort Story-Arc und welche Artefakte du pro Modul betonen solltest.
 
-**Begleitdokumente:** Technischer Gesamtplan in [arctis_ghost_project_plan.md](arctis_ghost_project_plan.md); **Terminal‑Schrittfolge** (kommando‑genau) in [demo_60.md](demo_60.md).
+**Begleitdokumente:** Technischer Gesamtplan in [arctis_ghost_project_plan.md](arctis_ghost_project_plan.md); **Terminal‑Schrittfolge** (kommando‑genau, inkl. `init-demo` → `doctor` → … → `verify`) in [demo_60.md](demo_60.md) und Beispielauszug [assets/ghost_demo_flow_sample.txt](assets/ghost_demo_flow_sample.txt).
 
 ---
 
@@ -32,31 +40,31 @@
 ### 0:00–0:08 — Hook
 
 - **Sagen:** „Die meisten Governance-Tools wollen ein neues Portal. Arctis Ghost braucht nur einen **Ordner** und eure bestehende API.“
-- **Zeigen:** Explorer-Fenster: `demo/incoming/` und `demo/outgoing/` (leer oder mit Beispiel).
+- **Zeigen:** Explorer-Fenster: Demo-Ordner mit `ghost.yaml`, `input.json`; **`outgoing/`** vor `pull-artifacts` leer oder nach dem Lauf mit **`outgoing/<run_id>/`** (kanonisch laut [README](../README.md) / [ghost_quickstart.md](ghost_quickstart.md)) — nicht mit dem Repo-`input/` für Test-Tasks verwechseln.
 
 ### 0:08–0:18 — First-Run in einem Satz
 
 - **Sagen:** „Erstinstallation: ein Befehl legt Config, Beispiel-Execute-JSON und eine **Kurzanleitung** an — minimale PLG-Schranke, kein Workshop.“
-- **Zeigen:** `README.md` nach `ghost init-demo` (Schritte: Workflow setzen → API-Key → `ghost run` / `watch` / `evidence`; Verweis auf `docs/demo_60.md`).
+- **Zeigen:** `README.md` nach `ghost init-demo` (Schritte: `workflow_id` und API-Key setzen → `ghost doctor` → `ghost run` …; technische Folge: [demo_60.md](demo_60.md)).
 
 ### 0:18–0:35 — Der magische Moment
 
-- **Tun:** Beispieldatei im Demo-Ordner (z. B. `input.json` aus **init-demo**) **oder** eigene JSON-Datei / Rezept-Pfad — **Hot-Folder-Watcher** ist **Roadmap**, nicht Teil der aktuellen CLI.
-- **Sagen:** „Ghost baut den **API-Body** (optional aus **Rezept**), setzt **Idempotency-Key** — und Ihr seht Ergebnis + Nachweis über **Watch**, **Evidence** und optional **Artefakte auf Platte**.“
-- **Zeigen:** Terminal: `ghost run input.json` **oder** `ghost run --recipe recipes/demo.yaml --input data.json`.
-- **Optional:** `ghost explain RUN_ID` — **Kurzfassung** aus dem Run-Objekt (kein vollständiges Evidence-JSON); für Rezept/Datei-Zuordnung weiterhin Roadmap (kein `ghost explain <pfad>`).
+- **Tun:** Vor dem Run: **`ghost doctor`** (API erreichbar). Beispieldatei im Demo-Ordner: `input.json` aus **init-demo** **oder** eigene JSON-Datei / `ghost run --recipe … --input …` — **Hot-Folder-Watcher** ist **Roadmap**, nicht Teil der aktuellen CLI.
+- **Sagen:** „Ghost baut den **API-Body** (optional aus **Rezept**), setzt **Idempotency-Key** — und Ihr seht Ergebnis + Nachweis über **Watch**, **Explain**/**Evidence** und **Artefakte auf Platte**.“
+- **Zeigen:** Terminal: `ghost run input.json` **oder** `ghost run --recipe recipes/demo.yaml --input data.json`, dann `ghost watch <run_id>`.
+- **Optional:** `ghost explain RUN_ID` — **Kurzfassung** aus dem Run-Objekt (kein vollständiges Evidence-JSON).
 
 ### 0:35–0:50 — Beweis & Differenzierung
 
 - **Zeigen:** Customer Output bzw. Run-Objekt: `ghost evidence RUN_ID` oder `ghost fetch RUN_ID`.
-- **Zeigen:** Lokales Bundle: `ghost pull-artifacts RUN_ID` → unter `outgoing_root` (Standard `outgoing/`) liegt **`outgoing/<run_id>/envelope.json`** plus **`skill_reports/*.json`** (wenn die API Reports liefert). **Branding-Felder** im Envelope sind **teilweise Roadmap** (siehe Implementierungs-Prompts P8).
+- **Zeigen:** Lokales Bundle: `ghost pull-artifacts RUN_ID` → unter `outgoing_root` (Standard `outgoing/`) liegt **`outgoing/<run_id>/envelope.json`** plus **`skill_reports/*.json`** (wenn die API Reports liefert). Anschließend **`ghost verify RUN_ID`** — Abgleich lokales Envelope ↔ API (siehe [ghost_cli_reference.md](ghost_cli_reference.md) P12).
 - **Zeigen:** Mindestens einen **Skill Report** in der Evidence-Ausgabe **oder** unter `skill_reports/` nach **pull-artifacts**.
 - **Sagen:** „Das ist nicht nur Output — das ist **prüfbar**. Jeder Schritt hing an **Policy, Budget und Tenant** — nicht an einem Skript auf meinem Laptop.“
 
 ### 0:50–1:00 — Close & nächster Schritt
 
-- **Sagen:** „Nächster Schritt bei euch: **Profil pro Abteilung** (`incoming/finance/`, `incoming/legal/`), **Sandbox** für IT (`--sandbox` + Mock), und **Insights** für den täglichen Wert — alles ohne die API umzubauen.“
-- **Optional:** QR oder Link auf **Verify** nur, wenn der Endpoint real existiert.
+- **Sagen:** „Nächster Schritt bei euch: Profile in `ghost.yaml`, Rezepte pro Team, **`ghost run --dry-run`** für Tests — Roadmap: Hot-Folder-Ideen (`incoming/…` in älteren Plänen) sind **nicht** die aktuelle CLI; Kanonik: [ghost_quickstart.md](ghost_quickstart.md).“
+- **Optional:** Link auf **Customer-Execute**-Doku / API — `ghost verify` setzt voraus, dass **`pull-artifacts`** zuvor gelaufen ist (lokales `envelope.json`).
 
 **Zeitpuffer:** Wenn das Netz zickt, Mock einschalten und nur den **lokalen** outgoing-Tree zeigen — die Story bleibt gleich.
 
@@ -69,6 +77,7 @@
 - [ ] `outgoing/<run_id>/envelope.json` (u. a. `run_id`, `skill_report_keys`, Zeitstempel)
 - [ ] `outgoing/<run_id>/skill_reports/<skill_id>.json` — wenn `execution_summary.skill_reports` gesetzt ist
 - [ ] Optional: `routing.json`, `cost.json` im gleichen Run-Ordner
+- [ ] Nach Pull: `ghost verify RUN_ID` → **`envelope verify: OK`** (Voraussetzung: `pull-artifacts` hat `envelope.json` geschrieben)
 
 **Zielbild (Roadmap / spätere Writer-Erweiterung):** u. a. `summary.txt`, `result.json`, `outgoing/errors/`, feste `incoming/`-Konvention — siehe [arctis_ghost_project_plan.md](arctis_ghost_project_plan.md) §6.5.
 

@@ -14,9 +14,33 @@ Er demonstriert:
 - Routing‑Entscheid (kompakt in `watch`, ausführlicher in `evidence`)
 - Kosten/Token‑Snapshot (Skill `cost_token_snapshot` und `execution_summary`)
 
-**Stand im Repo (ehrlich):** CLI umfasst u. a. `doctor`, `pull-artifacts` (lokale `envelope.json` / `skill_reports/`), `init-demo`, lokaler **State** (`state_enabled`), **Rezepte** (`--recipe`). **P10–P11:** Sandbox/Dry-Run und **`ghost heartbeat`** (opt-in, siehe [ghost_p11_test_matrix.md](ghost_p11_test_matrix.md)). **Noch nicht** (siehe [ghost_implementation_prompts.md](ghost_implementation_prompts.md) P12–P14): z. B. lokales Verify, Meta, Hooks, weitere PLG‑Automation. Die **API** kann deterministische Demos mit Header **`X-Arctis-Mock: true`** unterstützen; der Ghost‑HTTP‑Client setzt diesen Header **standardmäßig nicht** — ggf. separater Aufruf (z. B. `curl`) oder zukünftiges CLI‑Flag.
+**Stand im Repo (ehrlich):** CLI umfasst u. a. `doctor`, **`verify`** (lokales `envelope.json` vs. `GET /runs`, P12), `pull-artifacts` (lokale `envelope.json` / `skill_reports/`), `init-demo`, lokaler **State** (`state_enabled`), **Rezepte** (`--recipe`). **P10–P11:** Sandbox/Dry-Run und **`ghost heartbeat`** (opt-in, siehe [ghost_p11_test_matrix.md](ghost_p11_test_matrix.md)). **P12–P14:** u. a. `meta`, Hooks — siehe [ghost_cli_reference.md](ghost_cli_reference.md). Die **API** kann deterministische Demos mit Header **`X-Arctis-Mock: true`** unterstützen; der Ghost‑HTTP‑Client setzt diesen Header **standardmäßig nicht** — ggf. separater Aufruf (z. B. `curl`) oder zukünftiges CLI‑Flag.
 
 Alle unten genannten **ghost**‑Befehle sind **1:1 im Terminal** ausführbar. Voraussetzung: Arctis‑API läuft (z. B. `http://localhost:8000`) und du hast einen gültigen **Workflow** sowie **API‑Key**.
+
+Unter Windows steht das Kommando `ghost` ggf. nicht im `PATH`; dann über **`python -m arctis_ghost …`** dieselben Unterbefehle aufrufen.
+
+---
+
+## End-to-End-Reihenfolge (Launch A0.2)
+
+Diese Reihenfolge ist die **Referenz** für Demos und für [`arctis_ghost_demo_60.md`](arctis_ghost_demo_60.md). **`doctor`** und **`run`** brauchen eine erreichbare API; ohne laufenden Server schlägt `doctor` bei `/health` fehl (Konfiguration kann trotzdem als OK gemeldet werden).
+
+```bash
+ghost init-demo
+ghost doctor
+ghost run input.json
+ghost watch <run_id>
+ghost explain <run_id>
+ghost pull-artifacts <run_id>
+ghost verify <run_id>
+```
+
+Dazwischen oder danach optional: `ghost evidence <run_id>`, `ghost fetch <run_id>` — siehe unten.
+
+Beispiel-Terminalauszug (ohne Secrets): [`assets/ghost_demo_flow_sample.txt`](assets/ghost_demo_flow_sample.txt).
+
+**Kern-Story nur Run → Artefakte → Verify** (ohne Demo-Scaffold): siehe [ghost_quickstart.md](ghost_quickstart.md#customer-execute-von-null-bis-verify) und Beispiel-JSON [`examples/customer_execute_body.json`](examples/customer_execute_body.json) (gleiches Schema wie `input.json` von `init-demo`).
 
 ---
 
@@ -172,6 +196,7 @@ Konkrete Pipeline‑Outputs hängen von deiner **Definition** und dem Engine‑L
 
 - **`ghost doctor`** — prüft `ghost.yaml`/Env, `GET /health`, optional mit `ARCTIS_API_KEY` `GET /pipelines`.
 - **`ghost pull-artifacts RUN_ID`** — lädt den Run und schreibt unter `outgoing_root` (YAML/Env `outgoing_root` bzw. `ARCTIS_GHOST_OUTGOING_ROOT`) u. a. `envelope.json` (optional lokales **`branding`** aus Config), `skill_reports/*.json` und **`__STATUS.txt`** (Hinweis-Datei, keine API‑Durchsetzung; siehe [ghost_plg.md](ghost_plg.md)).
+- **`ghost verify RUN_ID`** — nach **pull-artifacts**: vergleicht lokales `envelope.json` mit `GET /runs/{id}` (P12; siehe [ghost_cli_reference.md](ghost_cli_reference.md)).
 - **`ghost explain RUN_ID`** — ein **GET /runs** und kompakte Textzeilen (Input/Routing/Skills/Cost); volle JSON‑Abschnitte mit `ghost evidence`.
 - **`ghost init-demo [VERZEICHNIS]`** — legt `ghost.yaml`‑Stub, `input.json`, `README.md` an (ohne `--force` kein Überschreiben).
 - **`ghost run --recipe recipes/….yaml --input daten.json`** — Rezept (Defaults, `skills`, `input_mapping` json/text) bauen den Execute‑Body; optional `--merge-json`, `--workflow-id` (CLI > Rezept > Profil).
@@ -196,12 +221,14 @@ Liefert das vollständige Run‑Objekt als JSON (ohne Evidence‑Layout).
 
 | Schritt | Befehl | Inhalt |
 |--------|--------|--------|
-| Config | `ghost.yaml` + Env | Basis‑URL, Workflow, API‑Key |
-| Optional | `ghost doctor` | Erreichbarkeit `/health`, optional `/pipelines` mit Key |
+| Scaffold | `ghost init-demo` | `ghost.yaml`, `input.json`, `README.md` im Arbeitsverzeichnis |
+| Config | `ghost.yaml` + Env | Basis‑URL, **echte** `workflow_id`, `ARCTIS_API_KEY` |
+| Diagnose | `ghost doctor` | `/health`, optional `/pipelines` mit Key |
 | Run | `ghost run input.json` (oder `--recipe … --input …`) | Execute inkl. Skills |
 | Live | `ghost watch RUN_ID` | Polling, Statusfarben, Kompaktzeilen |
 | Kurz | `ghost explain RUN_ID` | Kompakte Zeilen (ohne volle Skill‑JSON‑Blöcke) |
-| Evidence | `ghost evidence RUN_ID` | Input/Output/Routing/Costs/Skill‑Reports |
-| Optional | `ghost pull-artifacts RUN_ID` | Lokale Artefakte unter `outgoing_root/<run_id>/` |
+| Evidence | `ghost evidence RUN_ID` (optional) | Input/Output/Routing/Costs/Skill‑Reports |
+| Artefakte | `ghost pull-artifacts RUN_ID` | Lokale Dateien unter `outgoing_root/<run_id>/` |
+| Prüfung | `ghost verify RUN_ID` | Abgleich lokales `envelope.json` ↔ `GET /runs` |
 
 Als Nächstes eignet sich die **Demo‑Matrix**: [demo_matrix.md](demo_matrix.md) — Skill‑, Routing‑ und Evidence‑Referenz; **Landingpage‑Module** und Erzählbogen in [arctis_ghost_demo_matrix.md](arctis_ghost_demo_matrix.md).

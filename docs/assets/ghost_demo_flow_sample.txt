@@ -1,0 +1,41 @@
+# Beispiel: Ghost-Demo-Flow (Terminalauszug)
+#
+# Zweck: zeigt erwartete Befehlsfolge und typische Meldungen.
+# Keine echten API-Keys oder Run-IDs — Platzhalter: <REDACTED>, <RUN_ID>.
+# Vollständiger Walkthrough: docs/demo_60.md
+#
+# Hinweis: Unter Windows ggf. python -m arctis_ghost statt ghost verwenden,
+# wenn das Scripts-Verzeichnis nicht im PATH ist.
+
+$ cd /path/to/empty/demo-folder
+
+$ ghost init-demo
+OK Demo files created in /path/to/empty/demo-folder
+
+$ export ARCTIS_API_KEY=<REDACTED>
+# ghost.yaml: workflow_id durch eine echte Workflow-UUID des Tenants ersetzen (nicht 0000…).
+
+$ ghost doctor
+=== Ghost doctor ===
+OK Config profile 'default' — API base 'http://localhost:8000'
+OK GET /health — 200
+# Ohne laufende API: GET /health schlägt mit Verbindungsfehler fehl — Server starten
+# (z. B. uvicorn arctis.app:create_app --factory) oder Staging-URL in ghost.yaml setzen.
+
+$ ghost run input.json
+<RUN_ID>
+# Eine Zeile: Run-UUID für die folgenden Befehle kopieren.
+
+$ ghost watch <RUN_ID>
+=== Watching Run <RUN_ID> ===
+Status: running
+# … bis completed/success oder failure; Ctrl+C bricht ab (Exit 130).
+
+$ ghost explain <RUN_ID>
+# Kurzfassung: Input, Routing, Skills, Cost — siehe ghost_cli_reference.md
+
+$ ghost pull-artifacts <RUN_ID>
+# Schreibt u. a. outgoing/<RUN_ID>/envelope.json und skill_reports/*.json
+
+$ ghost verify <RUN_ID>
+envelope verify: OK

@@ -29,10 +29,13 @@ _README = """# Ghost demo (init-demo)
 
 1. Set `workflow_id` in `ghost.yaml` (or use env `ARCTIS_GHOST_WORKFLOW_ID`).
 2. `export ARCTIS_API_KEY=...`
-3. `ghost run input.json`  → copy run id
-4. `ghost watch <run_id>` / `ghost explain <run_id>` / `ghost evidence <run_id>`
+3. `ghost doctor` (API must be reachable — `/health`).
+4. `ghost run input.json` → copy run id
+5. `ghost watch <run_id>` / `ghost explain <run_id>` / `ghost evidence <run_id>`
+6. `ghost pull-artifacts <run_id>` → `ghost verify <run_id>`
 
 Full walkthrough: repository `docs/demo_60.md`
+60s storyboard: repository `docs/arctis_ghost_demo_60.md`
 Capability matrix: repository `docs/demo_matrix.md`
 """
 

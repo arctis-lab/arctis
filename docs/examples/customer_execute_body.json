@@ -1,0 +1,10 @@
+{
+  "input": {
+    "query": "What is the capital of France?"
+  },
+  "skills": [
+    {"id": "prompt_matrix"},
+    {"id": "routing_explain"},
+    {"id": "cost_token_snapshot"}
+  ]
+}

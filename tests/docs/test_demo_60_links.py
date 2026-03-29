@@ -9,10 +9,17 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 DOCS = _REPO_ROOT / "docs"
 DEMO_60 = DOCS / "demo_60.md"
+GHOST_DEMO_FLOW_SAMPLE = DOCS / "assets" / "ghost_demo_flow_sample.txt"
 
 
 def test_demo_60_file_exists() -> None:
     assert DEMO_60.is_file(), f"expected {DEMO_60}"
+
+
+def test_demo_60_referenced_terminal_sample_exists() -> None:
+    text = DEMO_60.read_text(encoding="utf-8")
+    assert "assets/ghost_demo_flow_sample.txt" in text
+    assert GHOST_DEMO_FLOW_SAMPLE.is_file(), f"expected {GHOST_DEMO_FLOW_SAMPLE}"
 
 
 def test_demo_60_contains_core_ghost_commands() -> None:
@@ -21,6 +28,10 @@ def test_demo_60_contains_core_ghost_commands() -> None:
     assert "ghost watch" in text
     assert "ghost explain" in text
     assert "ghost evidence" in text
+    assert "ghost doctor" in text
+    assert "ghost pull-artifacts" in text
+    assert "ghost verify" in text
+    assert "ghost init-demo" in text
 
 
 def test_demo_60_execute_body_json_is_valid() -> None:

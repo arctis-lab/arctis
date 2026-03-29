@@ -1,11 +1,27 @@
 # Arctis
 
-Python-Paket für **Pipeline A** (IR, Engine-Runtime, Control-Plane) sowie die **FastAPI-Arctis-API** und die **Ghost-CLI** — ein HTTP-only Client für Customer-Execute, Runs und lokale Artefakte (**kein** direkter Engine-Import aus Ghost).
+**Produkt:** Plattform für **Pipeline A** — IR, Engine-Runtime und Control Plane — mit einer **FastAPI-Arctis-API** für Customer-Execute und Betrieb. **Ghost** ist die schlanke **CLI**: nur HTTP, keine Engine im Client; Runs, Evidence und lokale Artefakte unter `outgoing/`.
 
+**Zielgruppe:** **Plattform- und Backend-Teams**, die Pipelines und Governance integrieren; **Solution- und Field-Rollen**, die Kunden einen **ordnerbasierten** Einstieg (`ghost init-demo` → `ghost run`) ohne separates Produkt-UI geben wollen.
+
+**API und Ghost:** Die **API** ist die autoritative Ausführungs- und Evidence-Quelle; **Ghost** spricht dieselben Endpunkte (`POST …/execute`, `GET /runs/{id}`) und spiegelt Ergebnisse lokal — **eine** Policy- und Nachweis-Wahrheit auf dem Server.
+
+- **Erster Run (≈30 s):** Abschnitt [Try Arctis in 30 seconds](#try-arctis-in-30-seconds) · ausführlicheres 60‑Sekunden-Storyboard: [`docs/arctis_ghost_demo_60.md`](docs/arctis_ghost_demo_60.md).
 - **Version:** siehe [`pyproject.toml`](pyproject.toml) — aktuell **0.1.0** ([`CHANGELOG.md`](CHANGELOG.md)).
 - **Paketinhalt:** ein Wheel umfasst API-, Engine- und Ghost-Code; Strategie für Publish/Split siehe [`docs/arctis_package_strategy.md`](docs/arctis_package_strategy.md).
 - **CI:** GitHub Actions laufen automatisch, sobald das Repository auf GitHub gepusht wird. (Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml) — u. a. Pull Requests und Push auf `main`/`master`.)
 - **Release-Tag:** Der Tag `v0.1.0` wird erst gesetzt, nachdem der Staging-E2E-Lauf (G4) erfolgreich abgeschlossen wurde — Checkliste [`docs/ghost_staging_e2e.md`](docs/ghost_staging_e2e.md), Details [`docs/RELEASE.md`](docs/RELEASE.md).
+
+### Verzeichnisse und Kanonik (Ghost)
+
+**Festgelegt: Option A** — eine dokumentierte Layout-Wahrheit für Ghost-Kunden-Workflows; kein zusätzliches `sandbox/`-Verzeichnis im Repository (dafür genügt ein beliebiger Zielordner für `ghost init-demo`).
+
+| Bereich | Inhalt |
+|--------|--------|
+| **Ghost-Arbeitsverzeichnis** | Beliebiger Ordner deiner Wahl (z. B. Ziel von `ghost init-demo`). Darin: `ghost.yaml`, Payload-Datei(en) — bei der Demo z. B. `input.json` im Ordnerroot (Scaffold: [`arctis_ghost/init_demo.py`](arctis_ghost/init_demo.py)) — sowie nach [`ghost pull-artifacts`](docs/ghost_cli_reference.md) die Artefakte unter **`outgoing/<run_id>/`** (Standard, konfigurierbar über `outgoing_root` / `ARCTIS_GHOST_OUTGOING_ROOT`). Optional ein lokales **`output/`**, falls ihr so arbeitet; das ist unabhängig vom Repo. |
+| **Repo-Root [`input/`](input/README.md) und [`output/`](output/README.md)** | Nur **Harness- und Test-Tasks** (nummerierte Ordner `001_…`–`021_…`, Golden Outputs). **Nicht** dasselbe wie der Ghost-Demo-Ordner — dort legt ihr eigene Dateien an, ohne diese Test-Fixtures zu verwenden. |
+
+**Hinweis zu älteren Begriffen:** In einigen Plan- und Roadmap-Dokumenten taucht **`incoming/`** als Hot-Folder-Idee auf. Die **kanonische Ghost-CLI** nutzt aktuell Payload-Dateien + `pull-artifacts` → `outgoing/…`, nicht ein Repo-verankertes `incoming/`. Details: [`docs/ghost_quickstart.md`](docs/ghost_quickstart.md).
 
 ---
 
@@ -18,7 +34,35 @@ python -m pip install --upgrade pip
 pip install -e ".[dev]"
 ```
 
-Konsole: `ghost` (Entry-Point aus `pyproject.toml`).
+Konsole: `ghost` (Entry-Point aus `pyproject.toml`). Unter Windows ggf. `python -m arctis_ghost …` nutzen, wenn `ghost` nicht im `PATH` steht.
+
+### Try Arctis in 30 seconds
+
+Diese **sechs Schritte** sind die kanonische **Erstkontakt-Sequenz** (PLG); sie entsprechen dem technischen Walkthrough in [`docs/demo_60.md`](docs/demo_60.md) und dem **60‑Sekunden**-Storyboard in [`docs/arctis_ghost_demo_60.md`](docs/arctis_ghost_demo_60.md) (Erzählzeit ≠ reine Terminalzeit).
+
+Voraussetzung: **Python 3.11+**, erreichbare **Arctis-API** (lokal oder Staging), **`ARCTIS_API_KEY`** und eine gültige **`workflow_id`** im Tenant (in `ghost.yaml` eintragen, Platzhalter `0000…` ersetzen).
+
+1. `pip install -e ".[dev]"` im Repo-Root.
+2. Leeren Ordner wählen, darin: `ghost init-demo` → erzeugt `ghost.yaml`, `input.json`, `README.md`.
+3. `export ARCTIS_API_KEY=…` (oder Windows-Äquivalent) und `workflow_id` in `ghost.yaml` setzen.
+4. `ghost doctor` — bei laufender API sollte `/health` grün sein.
+5. `ghost run input.json` → **Run-ID** kopieren.
+6. `ghost watch <run_id>` · `ghost explain <run_id>` · `ghost pull-artifacts <run_id>` · `ghost verify <run_id>`.
+
+Details und Storyboard (60 s Erzählung): [`docs/arctis_ghost_demo_60.md`](docs/arctis_ghost_demo_60.md). Kommando-genau: [`docs/demo_60.md`](docs/demo_60.md). Beispiel-Terminalauszug: [`docs/assets/ghost_demo_flow_sample.txt`](docs/assets/ghost_demo_flow_sample.txt).
+
+### Customer-Execute (Kern-Story)
+
+**Ein Satz:** `ghost run` mit einem **Execute-Body** (JSON-Datei) → **`ghost pull-artifacts <run_id>`** → **`ghost verify <run_id>`** — ohne Engine im Client, nur HTTP und lokale Artefakte.
+
+| Schritt | Befehl / Artefakt |
+|--------|-------------------|
+| 1 | `ghost.yaml` + Body-JSON im selben Arbeitsverzeichnis (frisch: `ghost init-demo` legt `input.json` an — gleiches Schema wie [`docs/examples/customer_execute_body.json`](docs/examples/customer_execute_body.json)). |
+| 2 | `ghost run body.json` — stdout: **Run-ID**. |
+| 3 | `ghost pull-artifacts <run_id>` — u. a. `outgoing/<run_id>/envelope.json`. |
+| 4 | `ghost verify <run_id>` — muss nach `pull-artifacts` laufen. |
+
+Nummerierte Liste und Diagramm: [`docs/ghost_quickstart.md#customer-execute-von-null-bis-verify`](docs/ghost_quickstart.md#customer-execute-von-null-bis-verify). **Alle Flags und Policy-Details:** [`docs/ghost_cli_reference.md`](docs/ghost_cli_reference.md).
 
 ### In fünf Schritten
 
@@ -28,6 +72,7 @@ Konsole: `ghost` (Entry-Point aus `pyproject.toml`).
 4. **Run:** `ghost run body.json` oder mit `--recipe recipe.yaml` und `--input` — siehe Referenz.
 5. **Artefakte & Prüfung:** `ghost pull-artifacts <run_id>` → `outgoing/<run_id>/`; danach `ghost verify <run_id>`.
 
+Kurzreferenz (Kanonik + Mindest-Commands): [`docs/ghost_quickstart.md`](docs/ghost_quickstart.md).  
 Demo-Storyboard (60s): [`docs/arctis_ghost_demo_60.md`](docs/arctis_ghost_demo_60.md).  
 Staging-Checkliste: [`docs/ghost_staging_e2e.md`](docs/ghost_staging_e2e.md).
 
@@ -122,10 +167,21 @@ Python: [Ruff](https://docs.astral.sh/ruff/). UI: ESLint in `ui/pipeline_a/`.
 
 ---
 
+## Launch-Orchestrierung (A0 → A4)
+
+**Source of Truth** für Agent- und Team-Workflows (Phasen, Gates, Owner, Commit-/Stop-Policy, Scorecard):
+
+→ [`docs/agent_prompt_plan_launch_a0_a4.md`](docs/agent_prompt_plan_launch_a0_a4.md)
+
+---
+
 ## Dokumentation
 
 - Pipeline A (Entwickler): [`docs/pipeline_a/README.md`](docs/pipeline_a/README.md)
 - Normative Pipeline-A-Spezifikation: `docs/pipeline-a-v1.3.md`
+- Ghost Quickstart (Kanonik): [`docs/ghost_quickstart.md`](docs/ghost_quickstart.md)
+- Customer-Execute-Beispiel (`body.json`): [`docs/examples/customer_execute_body.json`](docs/examples/customer_execute_body.json)
+- Ghost Demo-Terminalbeispiel: [`docs/assets/ghost_demo_flow_sample.txt`](docs/assets/ghost_demo_flow_sample.txt)
 - Ghost-CLI-Referenz: [`docs/ghost_cli_reference.md`](docs/ghost_cli_reference.md)
 - Mitwirkung & CI lokal: [`CONTRIBUTING.md`](CONTRIBUTING.md)
 - Release & Tags: [`docs/RELEASE.md`](docs/RELEASE.md)
