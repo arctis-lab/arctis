@@ -1,0 +1,4 @@
+# path: reports/phase5_scenarios_table.md
+# False positive: idempotency_key test value "phase5-s1-b-2-mixed" (line 9) matches generic-api-key.
+reports/phase5_scenarios_table.md:generic-api-key:9
+reports\phase5_scenarios_table.md:generic-api-key:9
