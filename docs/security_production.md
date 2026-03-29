@@ -34,7 +34,14 @@ Das Modul `main.py` ist **Legacy**; mit `ENV=prod` wird sein Import **hart abgel
 | `DATABASE_URL` | API | Pflicht für echte Auth; ohne Session → `X-API-Key` führt zu **503** (außer Dev+Unsafe-Flag). |
 | `ARCTIS_AUDIT_STORE` | API | `jsonl` \| `db` \| `none` — Audit-Abfrage-Backend; siehe [`Deployment.md`](Deployment.md) (A1.1), [`DR.md`](DR.md). |
 | `ARCTIS_AUDIT_JSONL_DIR` | API | Verzeichnis für JSONL-Audit, **erforderlich** wenn `ARCTIS_AUDIT_STORE=jsonl`. |
-| `SENTRY_DSN` | API | Optional; sensible Header werden im `before_send`-Hook redigiert. |
+| `SENTRY_DSN` | API | Error-Tracking; DSN **wie ein Secret** behandeln ([A1.2](Deployment.md#secrets-a12)). |
+| `ARCTIS_ENCRYPTION_KEY` | API | Fernet-Key; **Pflicht** für Verschlüsselung tenantgebundener Daten — nur aus Secret Store injizieren. |
+| `CONTROL_PLANE_API_KEY` | API / Tooling | Key für `launch_check`, Lasttests; nicht in Repo committen. |
+| `STRIPE_SECRET_KEY` | API | Billing; nur Namen in Doku, Werte im Secret Store ([A1.2](Deployment.md#secrets-a12)). |
+| `STRIPE_WEBHOOK_SECRET` | API | Stripe-Webhook-Signatur. |
+| `OPENAI_API_KEY` | API | Optional globaler Default-LLM-Key; Alternativ Keys nur in der DB pro Tenant. |
+
+Vollständige Secret-Policy und Tabellen: [`Deployment.md`](Deployment.md) (Abschnitt **Secrets (A1.2)**).
 
 ## OpenAPI / Docs
 

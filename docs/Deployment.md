@@ -34,6 +34,39 @@ Details zu weiteren Prod-Flags: [`security_production.md`](security_production.m
 
 ---
 
+## Secrets (A1.2)
+
+**Policy:** Im Repository, in Issues und in Doku nur **Namen** von Umgebungsvariablen verwenden. **Werte** liegen im **Secret Store** der Laufzeit (z. B. Kubernetes Secrets, AWS Secrets Manager, Vault, verschlüsselte CI-Environments) und werden zur Startzeit injiziert. Keine Klartext-Credentials in Git — siehe [`.gitleaks.toml`](../.gitleaks.toml) und [`docs/security_production.md`](security_production.md).
+
+### Kernvariablen (Namen)
+
+| Name | Zweck |
+|------|--------|
+| `ARCTIS_ENCRYPTION_KEY` | Fernet-Key für tenantgebundene Verschlüsselung (u. a. gespeicherte LLM-Keys); muss ein gültiger Fernet-String sein. |
+| `CONTROL_PLANE_API_KEY` | API-Key für Smoke-/Launch-Szenarien und Lasttests (u. a. [`launch_check`](../arctis/scripts/launch_check.py)). |
+| `CONTROL_PLANE_URL` | Öffentliche oder interne **Basis-URL** der Arctis-API (kein Secret; gehört zur gleichen Konfigurationssession wie der Key). |
+| `SENTRY_DSN` | Error-Tracking; der DSN ist **sensibel** — wie ein Secret behandeln. |
+| `STRIPE_SECRET_KEY` | Billing API (Stripe). |
+| `STRIPE_WEBHOOK_SECRET` | Signaturprüfung für Stripe-Webhooks. |
+
+### LLM-Provider (optional / betriebsspezifisch)
+
+| Name | Hinweis |
+|------|--------|
+| `OPENAI_API_KEY` | Default-LLM über [`Settings`](../arctis/config.py); viele Deployments speichern Modell-Keys **pro Tenant** in der Datenbank statt global. |
+
+Weitere Provider-Umgebungen (z. B. `OPENAI_BASE_URL`, `OLLAMA_*`) sind Konfiguration, meist ohne gleiches Geheimnisniveau wie Stripe — trotzdem nicht unkontrolliert leaken.
+
+### Identity (Vorbereitung A1.3)
+
+`python -m arctis.scripts.launch_check` verlangt **entweder** das **Auth0**-Set (`AUTH0_SECRET`, `AUTH0_BASE_URL`, `AUTH0_ISSUER_BASE_URL`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`) **oder** **Supabase** (`NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`) — exakt wie in [`launch_check.py`](../arctis/scripts/launch_check.py) (`AUTH0_REQUIRED` / `SUPABASE_REQUIRED`).
+
+### Launch-Readiness
+
+Vollständige Liste der von `launch_check` geprüften Variablen: Docstring in [`arctis/scripts/launch_check.py`](../arctis/scripts/launch_check.py).
+
+---
+
 ## API base URL (OpenAPI servers)
 
 - **Local:** `http://127.0.0.1:8000` (typical `uvicorn` default).
