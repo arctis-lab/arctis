@@ -17,6 +17,10 @@ Technische Tiefe: verlinkte Dokumente unter `docs/`.
 
 Pricing, SLA, Evidence-Kernbotschaften, Release-Policy für Vertrieb und Vertrag: **[`../commercial/README.md`](../commercial/README.md)**.
 
+## Pilot & Post-Launch (Phase A4)
+
+Tenant-Setup, Pilot-Scope, Onboarding-Call, Checklisten: **[`../pilot/README.md`](../pilot/README.md)**.
+
 ---
 
 ## Ghost CLI (Customer-Execute)
